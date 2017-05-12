@@ -1,0 +1,20 @@
+#
+# generated on 2017/05/08 11:18:06
+#
+# --table-start--
+dataClass=mvc.androidexample.com.demo_orm2.Employee
+tableName=employee
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=Emp_Name
+# --field-end--
+# --field-start--
+fieldName=Emp_Desig
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
