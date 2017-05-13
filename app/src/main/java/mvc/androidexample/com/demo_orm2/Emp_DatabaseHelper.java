@@ -66,6 +66,10 @@ public class Emp_DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return empRuntimeExceptionDao;
     }
 
+    public Dao.CreateOrUpdateStatus createOrUpdate(Employee obj) throws SQLException {
+        Dao<Employee, ?> dao = (Dao<Employee, ?>) getDao(obj.getClass());
+        return dao.createOrUpdate(obj);
+    }
 
 
 }

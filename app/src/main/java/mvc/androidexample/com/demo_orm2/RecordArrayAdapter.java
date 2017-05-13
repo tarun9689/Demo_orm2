@@ -34,7 +34,7 @@ public class RecordArrayAdapter extends ArrayAdapter<Employee>
     private List records;
     private Emp_DatabaseHelper empdatabase;
     String emp_name,emp_dsg;
-    int _id;
+
     private Dao<Employee, Integer> teacherDao;
     private Employee teacherDetails;
 
@@ -69,82 +69,42 @@ public class RecordArrayAdapter extends ArrayAdapter<Employee>
 
         holder.empname.setText(teacherDetails.Emp_Name);
         holder.empdsg.setText(teacherDetails.Emp_Desig);
-
-//        holder.empname.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try{
-//                    final Dao<Employee, Integer> techerDao1 = getHelper().getEmpdao();
-//                    String s1 = techerDao1.queryForId(position).toString();
-//                    System.out.println("positon   "+s1);
-//                }
-//                catch(SQLException se){
-//                    se.printStackTrace();
-//                }
-//
-//
-//            }
-//        });
-
         holder.img_del.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 try{
-                    final Dao<Employee, Integer> techerDao1 = getHelper().getEmpdao();
+                    teacherDao = getHelper().getEmpdao();
+                    teacherDetails = getItem(position);
                     int _id = teacherDetails.getId();
-                    techerDao1.deleteById(_id);
+                    teacherDao.deleteById(_id);
 
-                   getContext().startActivity(new Intent(getContext(), SecondActivity.class));
+                    getContext().startActivity(new Intent(getContext(), SecondActivity.class));
                     ((Activity)getContext()).finish();
                 }
                 catch(SQLException se){
                     se.printStackTrace();
                 }
             }
+
         });
 
         holder.img_upd.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                Employee user = getItem(position);
-                System.out.println(" dadad "+user);
 
 
 
+                teacherDetails = getItem(position);
 
-
-
-//               try{
-//                final Dao<Employee, Integer> techerDao3 = getHelper().getEmpdao();
-
-//                    System.out.println("position"+position);
-//                    teacherDetails.getId();
-
-
-//                    final Dao<Employee, Integer> techerDao3 = getHelper().getEmpdao();
-//                   _id  = teacherDetails.getId();
-//                    emp_name = teacherDetails.getEmp_Name();
-//                    emp_dsg = teacherDetails.getEmp_Desig();
-//                    System.out.println("before call dialog  id   " +_id);
-//                    System.out.println("before call dialog  emp   " +emp_name);
-//
-//                    Dialog(_id,emp_name,emp_dsg);
-
-//                    techerDao1.deleteById(_id);
-//                    getContext().startActivity(new Intent(getContext(), SecondActivity.class));
-//                }
-//                catch(SQLException se){
-//                    se.printStackTrace();
-//                }
+                System.out.println("    "+teacherDetails.toString() );
+               int eid = teacherDetails.getId();
+                String sname =teacherDetails.getEmp_Name();
+                System.out.println("    "+ sname +"    "+eid);
+               Dialog(sname);
             }
         });
-
-
-
-
-
-
         return convertView;
     }
 
@@ -164,38 +124,34 @@ public class RecordArrayAdapter extends ArrayAdapter<Employee>
     }
 
 
-    public void Dialog(final int empid, final String emp_name, final String emp_dsg) {
+    public void Dialog( String ename ) {
 
-        System.out.println("in dialog  id   " +empid);
-        System.out.println("in dialog  emp   " +emp_name);
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("Update");
         final EditText input = new EditText(getContext());
         alert.setView(input);
 
-        input.setText(emp_name);
-        System.out.println("input  emp   " +input);
+        input.setText(ename);
 
-        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                try{ final Dao<Employee, Integer> techerDao2 = getHelper().getEmpdao();
+
+
+
+                try{ teacherDao = getHelper().getEmpdao();
                     String srt = input.getEditableText().toString();
-                    System.out.println("string s1  emp   " +srt);
-                    System.out.println("onclick dialog  id   " +empid);
+
                     teacherDetails.setEmp_Name(srt);
+                    updateStudent(teacherDetails);
 
-                    techerDao2.update(teacherDetails);
+                    getContext().startActivity(new Intent(getContext(), SecondActivity.class));
+                    ((Activity)getContext()).finish();
+
                     input.setText("");
-                    String ss = techerDao2.queryForId(empid).toString();
-                    System.out.println("Emp data after update  " +ss);
-
                 }
                 catch(SQLException se){
 
                 }
-
-
-
             }
         });
 
@@ -211,11 +167,13 @@ public class RecordArrayAdapter extends ArrayAdapter<Employee>
 
     }
 
+    public void updateStudent(Employee student) {
 
-
-
-
-
-
-
+        System.out.println(""+student.toString());
+        try {
+            empdatabase.createOrUpdate(student);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
